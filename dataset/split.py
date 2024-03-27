@@ -19,12 +19,18 @@ train_mask_dir = r"C:\Users\qk516\Desktop\data3\train\mask"
 train_gps_dir = r"C:\Users\qk516\Desktop\data3\train\gps"
 
 split_ratio = 0.8  # 训练集比例，测试集比例为 1 - split_ratio
+blank = [457, 458, 459, 460, 618, 915]
 
+dirs = [test_sat_dir, test_mask_dir, test_gps_dir, train_gps_dir, train_mask_dir, train_gps_dir]
+for dir in dirs:
+    if not os.path.exists(dir):
+        os.mkdir(dir)
 list = [sat_dir, mask_dir, traj_dir]
 test_dir = [test_sat_dir, test_mask_dir, test_gps_dir]
 train_dir = [train_sat_dir, train_mask_dir, train_gps_dir]
 for index, file_dir in enumerate(list):
     files = [file for file in os.listdir(file_dir) if file.endswith('tif') or file.endswith('png')]
+
     random.shuffle(files)
     split_index = int(len(files) * split_ratio)
     train_files = files[:split_index]
@@ -32,10 +38,10 @@ for index, file_dir in enumerate(list):
     for file in train_files:
         src = os.path.join(file_dir, file)
         dst = os.path.join(train_dir[index], file)
-        shutil.copy(dst, src)
+        shutil.copy(src, dst)
     for file in test_files:
         src = os.path.join(file_dir, file)
         dst = os.path.join(test_dir[index], file)
-        shutil.copy(dst, src)
+        shutil.copy(src, dst)
 
 print("数据集分割完成！")
